@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_height="fill_parent"
+              android:layout_width="fill_parent">
+    <TextView android:layout_width="fill_parent"
+              android:id="@+id/txt_main_table_title"
+              android:layout_height="wrap_content"
+              android:text="@string/main_lst_header"
+              android:layout_weight="1"/>
+    <ListView android:id="@+id/main_favourites_lst"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_weight="100"/>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:id="@+id/main_buttons_layout"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1">
+        <Button android:id="@+id/main_add_new_btn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/main_add_new_txt"
+                android:layout_weight="0.5"/>
+        <Button android:id="@+id/main_delete_btn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/main_delete_txt"
+                android:layout_weight="0.5"/>
+    </LinearLayout>
+</LinearLayout>
+

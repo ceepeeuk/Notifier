@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Auction Notifier</string>
+    <string name="main_lst_header">Watched Listings</string>
+    <string name="main_add_new_txt">Add New</string>
+    <string name="main_delete_txt">Delete</string>
+    <string name="main_add_new_dialog_txt">Add new listing search</string>
+</resources>
