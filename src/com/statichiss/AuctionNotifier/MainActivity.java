@@ -3,12 +3,15 @@ package com.statichiss.AuctionNotifier;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.*;
 
 public class MainActivity extends Activity implements View.OnClickListener {
+
+    private final String TAG = getClass().getName();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,16 +27,31 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     public void onClick(View view) {
         switch (view.getId()) {
+
             case R.id.main_add_new_btn:
+                DatabaseHelper databaseHelper = new DatabaseHelper(getBaseContext());
+
                 final EditText searchItem = new EditText(MainActivity.this);
                 searchItem.setSingleLine();
+
+                final Spinner durationSpinner = new Spinner(MainActivity.this);
+                Cursor durationCursor = databaseHelper.getDurations();
+                SimpleCursorAdapter durationAdapter = new SimpleCursorAdapter(MainActivity.this, R.layout.simple_spinner_dropdown,
+                        durationCursor, new String[]{DatabaseHelper.SCHEDULE_DESCRIPTION}, new int[]{R.id.name_entry});
+                durationAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown);
+                durationSpinner.setAdapter(durationAdapter);
+
+                LinearLayout layout = new LinearLayout(MainActivity.this);
+                layout.setOrientation(LinearLayout.VERTICAL);
+                layout.addView(searchItem);
+                layout.addView(durationSpinner);
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext())
                         .setMessage(R.string.main_add_new_dialog_txt)
-                        .setView(searchItem)
+                        .setView(layout)
                         .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 // Add to DB
-                                DatabaseHelper databaseHelper = new DatabaseHelper();
                                 // Set new Alarm
                                 // Check now
                             }
@@ -45,6 +63,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
                 builder.create().show();
                 break;
+
             case R.id.main_delete_btn:
                 break;
         }
