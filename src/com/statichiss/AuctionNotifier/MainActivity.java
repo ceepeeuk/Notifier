@@ -29,14 +29,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
         switch (view.getId()) {
 
             case R.id.main_add_new_btn:
-                DatabaseHelper databaseHelper = new DatabaseHelper(getBaseContext());
+                final DatabaseHelper databaseHelper = new DatabaseHelper(getBaseContext());
 
                 final EditText searchItem = new EditText(MainActivity.this);
                 searchItem.setSingleLine();
 
                 final Spinner durationSpinner = new Spinner(MainActivity.this);
                 Cursor durationCursor = databaseHelper.getDurations();
-                SimpleCursorAdapter durationAdapter = new SimpleCursorAdapter(MainActivity.this, R.layout.simple_spinner_dropdown,
+                final SimpleCursorAdapter durationAdapter = new SimpleCursorAdapter(MainActivity.this, R.layout.simple_spinner_dropdown,
                         durationCursor, new String[]{DatabaseHelper.SCHEDULE_DESCRIPTION}, new int[]{R.id.name_entry});
                 durationAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown);
                 durationSpinner.setAdapter(durationAdapter);
@@ -52,6 +52,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 // Add to DB
+                                databaseHelper.addNewSearch(searchItem.getText().toString(), durationSpinner.getSelectedItemId());
                                 // Set new Alarm
                                 // Check now
                             }
