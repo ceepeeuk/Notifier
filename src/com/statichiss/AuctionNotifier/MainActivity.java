@@ -53,8 +53,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 // Add to DB
                                 databaseHelper.addNewSearch(searchItem.getText().toString(), durationSpinner.getSelectedItemId());
-                                // Set new Alarm
+                                // TODO Set new Alarm (leave for now, but use alarm helper to support phone restarts, need BroadcastReceiver too)
                                 // Check now
+
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

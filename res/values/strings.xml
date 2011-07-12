@@ -4,5 +4,5 @@
     <string name="main_lst_header">Watched Listings</string>
     <string name="main_add_new_txt">Add New</string>
     <string name="main_delete_txt">Delete</string>
-    <string name="main_add_new_dialog_txt">Enter eBay search term and how often to check</string>
+    <string name="main_add_new_dialog_txt">Enter eBay search term and frequency of check</string>
 </resources>
