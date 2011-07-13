@@ -54,6 +54,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                                 // Add to DB
                                 databaseHelper.addNewSearch(searchItem.getText().toString(), durationSpinner.getSelectedItemId());
                                 // TODO Set new Alarm (leave for now, but use alarm helper to support phone restarts, need BroadcastReceiver too)
+
                                 // Check now
 
                             }
