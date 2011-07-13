@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
@@ -56,7 +57,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
                                 // TODO Set new Alarm (leave for now, but use alarm helper to support phone restarts, need BroadcastReceiver too)
 
                                 // Check now
-
+                                EbayInvoke ebayInvoke = new EbayInvoke(getBaseContext());
+                                try {
+                                    String response = ebayInvoke.search(searchItem.getText().toString());
+                                    Log.d(TAG, "Response = " + response);
+                                } catch (Exception e) {
+                                    Log.e(TAG, "Oops", e);
+                                }
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
