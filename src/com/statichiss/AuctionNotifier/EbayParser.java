@@ -68,14 +68,14 @@ public class EbayParser {
         try {
             listing.setImageUrl(this.stripWrapper(jsonObj.getString(this.resources.getString(R.string.ebay_tag_galleryURL))));
         } catch (JSONException jx) {
-            Log.e(TAG, "parseListing: parsing image URL", jx);
+            //Log.e(TAG, "parseListing: parsing image URL", jx);
             listing.setImageUrl(null);
         }
 
         try {
             listing.setLocation(this.stripWrapper(jsonObj.getString(this.resources.getString(R.string.ebay_tag_location))));
         } catch (JSONException jx) {
-            Log.e(TAG, "parseListing: parsing location", jx);
+            //Log.e(TAG, "parseListing: parsing location", jx);
             listing.setLocation(null);
         }
 
@@ -97,7 +97,7 @@ public class EbayParser {
                     this.formatCurrency(shippingServiceCostObj.getString(this.resources.getString(R.string.ebay_tag_value)),
                             currentPriceObj.getString(this.resources.getString(R.string.ebay_tag_currencyId))));
         } catch (JSONException jx) {
-            Log.e(TAG, "parseListing: parsing shipping cost", jx);
+            //Log.e(TAG, "parseListing: parsing shipping cost", jx);
             listing.setShippingCost("Not listed");
         }
 
@@ -123,7 +123,7 @@ public class EbayParser {
                             listing.setBuyItNow(false);
                         }
                     } catch (JSONException jx) {
-                        Log.e(TAG, "parseListing: parsing but it now", jx);
+                        //Log.e(TAG, "parseListing: parsing but it now", jx);
                     }
 
                 } else {
@@ -132,7 +132,7 @@ public class EbayParser {
                 }
 
             } catch (JSONException jx) {
-                Log.e(TAG, "parseListing: parsing listing type", jx);
+                //Log.e(TAG, "parseListing: parsing listing type", jx);
             }
 
             //get start and end dates - optional
@@ -142,13 +142,13 @@ public class EbayParser {
                 Date endTime = dateFormat.parse(listingInfoObj.getString(this.resources.getString(R.string.ebay_tag_endTime)));
                 listing.setEndTime(endTime);
             } catch (Exception x) { //generic - both ParseException and JSONException can be thrown, same result either way
-                Log.e(TAG, "parseListing: parsing start and end dates", x);
+                //Log.e(TAG, "parseListing: parsing start and end dates", x);
                 listing.setStartTime(null);
                 listing.setEndTime(null);
             }
 
         } catch (JSONException jx) {
-            Log.e(TAG, "parseListing: parsing listing info", jx);
+            //Log.e(TAG, "parseListing: parsing listing info", jx);
             listing.setStartTime(null);
             listing.setEndTime(null);
         }

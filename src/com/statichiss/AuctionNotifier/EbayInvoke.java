@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.Log;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -17,7 +18,11 @@ import java.io.InputStreamReader;
 public class EbayInvoke {
     private static String appID;
     private static String ebayURL;
+    private static String maxNumOfResults;
+    private static String globalId;
+
     private Resources resources;
+    private static final String TAG = "com.statichiss.AuctionNotifier.EbayInvoke";
 
     public EbayInvoke(Context context) {
         this.resources = context.getResources();
@@ -31,9 +36,15 @@ public class EbayInvoke {
             */
             appID = this.resources.getString(R.string.ebay_appid_production);
             ebayURL = this.resources.getString(R.string.ebay_wsurl_production);
+            // TODO: pull this from prefs too
+            maxNumOfResults = this.resources.getString(R.string.ebay_max_number_of_results);
+            globalId = this.resources.getString(R.string.ebay_global_id);
         } else {
             appID = this.resources.getString(R.string.ebay_appid_production);
             ebayURL = this.resources.getString(R.string.ebay_wsurl_production);
+            // TODO: pull this from prefs too
+            maxNumOfResults = this.resources.getString(R.string.ebay_max_number_of_results);
+            globalId = this.resources.getString(R.string.ebay_global_id);
         }
     }
 
@@ -47,8 +58,7 @@ public class EbayInvoke {
     }
 
     private String getRequestURL(String keyword) {
-        CharSequence requestURL =
-                TextUtils.expandTemplate(this.resources.getString(R.string.ebay_request_template), ebayURL, appID, keyword);
+        CharSequence requestURL = TextUtils.expandTemplate(this.resources.getString(R.string.ebay_request_template), ebayURL, appID, keyword, maxNumOfResults, globalId);
         return (requestURL.toString());
     }
 
@@ -56,8 +66,12 @@ public class EbayInvoke {
         String result = null;
         HttpClient httpClient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(this.getRequestURL(keyword));
+        Log.d(TAG, this.getRequestURL(keyword));
+        // Set eBay locale here, TODO: pull from preferences.
+        //httpGet.setHeader("X-EBAY-SOA-GLOBAL-ID", "EBAY-GB");
         HttpResponse response = httpClient.execute(httpGet);
         HttpEntity httpEntity = response.getEntity();
+
         if (httpEntity != null) {
             InputStream in = httpEntity.getContent();
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -69,6 +83,7 @@ public class EbayInvoke {
             result = temp.toString();
             in.close();
         }
+
         return (result);
     }
 }

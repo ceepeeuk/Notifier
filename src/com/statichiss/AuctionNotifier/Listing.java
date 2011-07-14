@@ -21,6 +21,25 @@ public class Listing implements Comparable<Listing> {
         return (another.startTime.compareTo(this.startTime));
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder()
+                .append("\n\n")
+                .append("Title: ")
+                .append(getTitle())
+                .append("\n")
+                .append("Current Price: ")
+                .append(getCurrentPrice())
+                .append("\n")
+                .append("Start time: ")
+                .append(getStartTime())
+                .append("\n")
+                .append("End time:")
+                .append(getEndTime())
+                .append("\n\n");
+        return sb.toString();
+    }
+
     public String getId() {
         return id;
     }

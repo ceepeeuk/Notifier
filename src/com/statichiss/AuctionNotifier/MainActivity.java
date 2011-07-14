@@ -9,6 +9,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
+import java.net.URLEncoder;
+import java.util.ArrayList;
+
 public class MainActivity extends Activity implements View.OnClickListener {
 
     private final String TAG = getClass().getName();
@@ -58,11 +61,23 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
                                 // Check now
                                 EbayInvoke ebayInvoke = new EbayInvoke(getBaseContext());
+                                EbayParser ebayParser = new EbayParser(getBaseContext());
+
                                 try {
-                                    String response = ebayInvoke.search(searchItem.getText().toString());
-                                    Log.d(TAG, "Response = " + response);
+
+                                    Log.d(TAG, "Calling eBay");
+                                    String response = ebayInvoke.search(URLEncoder.encode(searchItem.getText().toString()));
+                                    Log.d(TAG, "Processing eBay response");
+
+                                    ArrayList<Listing> listings = ebayParser.parseListings(response);
+                                    Log.d(TAG, "Found " + listings.size() + " auctions");
+
+                                    for (Listing listing : listings) {
+                                        Log.d(TAG, listing.toString());
+                                    }
+
                                 } catch (Exception e) {
-                                    Log.e(TAG, "Oops", e);
+                                    Log.e(TAG, "Exception occurred calling ebay:", e);
                                 }
                             }
                         })
