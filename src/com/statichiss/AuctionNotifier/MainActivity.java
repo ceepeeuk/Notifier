@@ -24,6 +24,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
         Button deleteButton = (Button) findViewById(R.id.main_add_new_btn);
         deleteButton.setOnClickListener(this);
 
+        if (savedInstanceState != null && savedInstanceState.getInt("SearchId", -1) > 0) {
+            NotificationHelper.cancelNotification(this, savedInstanceState.getInt("SearchId", -1));
+        }
     }
 
     public void onClick(View view) {
@@ -62,7 +65,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
                                 // TODO Set new Alarm (leave for now, but use alarm helper to support phone restarts, need BroadcastReceiver too)
 
-                                WebProcessorTask webProcessorTask = new WebProcessorTask(activityContext);
+                                WebProcessorTask webProcessorTask = new WebProcessorTask(activityContext, false);
                                 webProcessorTask.execute(searchId);
 
                                 databaseHelper.close();

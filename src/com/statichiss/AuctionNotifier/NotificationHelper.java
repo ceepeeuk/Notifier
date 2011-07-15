@@ -17,9 +17,15 @@ public class NotificationHelper {
 
         CharSequence contentTitle = context.getString(R.string.app_name);
         Intent notificationIntent = new Intent(context, MainActivity.class);
+        notificationIntent.putExtra("searchId", searchId);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
         notification.setLatestEventInfo(context, contentTitle, message, contentIntent);
         notificationManager.notify(searchId, notification);
+    }
+
+    public static void cancelNotification(Context context, int searchId) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(searchId);
     }
 }
