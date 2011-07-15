@@ -2,15 +2,12 @@ package com.statichiss.AuctionNotifier;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.*;
-
-import java.net.URLEncoder;
-import java.util.ArrayList;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -33,15 +30,17 @@ public class MainActivity extends Activity implements View.OnClickListener {
         switch (view.getId()) {
 
             case R.id.main_add_new_btn:
+                final Context activityContext = this;
                 final DatabaseHelper databaseHelper = new DatabaseHelper(getBaseContext());
 
                 final EditText searchItem = new EditText(MainActivity.this);
                 searchItem.setSingleLine();
 
                 final Spinner durationSpinner = new Spinner(MainActivity.this);
-                Cursor durationCursor = databaseHelper.getDurations();
+                final Cursor durationCursor = databaseHelper.getDurations();
                 final SimpleCursorAdapter durationAdapter = new SimpleCursorAdapter(MainActivity.this, R.layout.simple_spinner_dropdown,
                         durationCursor, new String[]{DatabaseHelper.SCHEDULE_DESCRIPTION}, new int[]{R.id.name_entry});
+
                 durationAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown);
                 durationSpinner.setAdapter(durationAdapter);
 
@@ -54,31 +53,19 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         .setMessage(R.string.main_add_new_dialog_txt)
                         .setView(layout)
                         .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                durationCursor.close();
                                 // Add to DB
-                                databaseHelper.addNewSearch(searchItem.getText().toString(), durationSpinner.getSelectedItemId());
+                                String searchTerm = searchItem.getText().toString();
+                                long searchId = databaseHelper.addNewSearch(searchTerm, durationSpinner.getSelectedItemId());
+
                                 // TODO Set new Alarm (leave for now, but use alarm helper to support phone restarts, need BroadcastReceiver too)
 
-                                // Check now
-                                EbayInvoke ebayInvoke = new EbayInvoke(getBaseContext());
-                                EbayParser ebayParser = new EbayParser(getBaseContext());
+                                WebProcessorTask webProcessorTask = new WebProcessorTask(activityContext);
+                                webProcessorTask.execute(searchId);
 
-                                try {
-
-                                    Log.d(TAG, "Calling eBay");
-                                    String response = ebayInvoke.search(URLEncoder.encode(searchItem.getText().toString()));
-                                    Log.d(TAG, "Processing eBay response");
-
-                                    ArrayList<Listing> listings = ebayParser.parseListings(response);
-                                    Log.d(TAG, "Found " + listings.size() + " auctions");
-
-                                    for (Listing listing : listings) {
-                                        Log.d(TAG, listing.toString());
-                                    }
-
-                                } catch (Exception e) {
-                                    Log.e(TAG, "Exception occurred calling ebay:", e);
-                                }
+                                databaseHelper.close();
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

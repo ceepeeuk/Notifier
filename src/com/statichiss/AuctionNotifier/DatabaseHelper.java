@@ -30,8 +30,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String LISTINGS_QUERY_STRING = "create table listings (_id integer primary key, listing_definition integer, auction_type integer, price numeric, datetime_found numeric, auction_end_date numeric, already_notified numeric, " +
             "foreign key (listing_definition) references listing_definition(_id), foreign key (auction_type) references auction_type(_id));";
 
+    private SQLiteDatabase db;
+
     public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, VERSION);
+        db = getWritableDatabase();
     }
 
     @Override
@@ -49,15 +52,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
     }
 
-    public Cursor getDurations() {
-        return getReadableDatabase().query(SCHEDULE_TABLE, new String[]{ID, SCHEDULE_DURATION, SCHEDULE_DESCRIPTION}, null, null, null, null, null);
+    @Override
+    public void close() {
+        if (db != null) {
+            db.close();
+            super.close();
+        }
     }
 
-    public void addNewSearch(String searchTerm, long scheduleId) {
+    public Cursor getDurations() {
+        return db.query(SCHEDULE_TABLE, new String[]{ID, SCHEDULE_DURATION, SCHEDULE_DESCRIPTION}, null, null, null, null, null);
+    }
+
+    public long addNewSearch(String searchTerm, long scheduleId) {
         ContentValues cv = new ContentValues();
         cv.put(LISTING_DEFINITION_NAME, searchTerm);
         cv.put(LISTING_DEFINITION_SCHEDULE, scheduleId);
-        getWritableDatabase().insert(LISTING_DEFINITION_TABLE, LISTING_DEFINITION_NAME, cv);
+        return db.insert(LISTING_DEFINITION_TABLE, LISTING_DEFINITION_NAME, cv);
+    }
+
+    public String getSearch(long searchId) throws Exception {
+        Cursor cursor = db.query(LISTING_DEFINITION_TABLE, new String[]{LISTING_DEFINITION_NAME}, "_ID = ?",
+                new String[]{String.valueOf(searchId)}, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            return cursor.getString(0);
+        } else {
+            throw new Exception("searchId " + searchId + " cannot be found in the database");
+        }
     }
 
     private void insertScheduleData(SQLiteDatabase db) {
@@ -112,6 +134,4 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put("description", "Buy It Now");
         db.insert("auction_type", "description", cv);
     }
-
-
 }
